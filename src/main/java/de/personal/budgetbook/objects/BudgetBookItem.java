@@ -31,6 +31,15 @@ public class BudgetBookItem {
 		this.amount = amount;
 	}
 	
+	public BudgetBookItem(LocalDate date, String description, Category category, double amount) {
+		this.date = date;
+		this.description = description;
+		this.category = category;
+		this.amount = amount;
+	}
+	
+	public BudgetBookItem() {}
+	
 	public long getId() {
 		return this.id;
 	}
