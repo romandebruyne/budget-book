@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +25,17 @@ public class BudgetBookItemService {
 	@Autowired
 	private BudgetBookItemRepository budgetBookItemRepo;
 	
-	public void readBudgetBookDataFromCSV(boolean header) {
+	public void readBudgetBookDataFromCSV(boolean header, char decimalSeperator) {
 		String path = "src/main/resources/fakebudgetdata.csv", line;
 		String[] information = new String[6];
 		BudgetBookItem tempBudgetBookItem;
+		NumberFormat numFormat;
+		
+		if (decimalSeperator == ',') {
+			numFormat = NumberFormat.getInstance(Locale.GERMAN);
+		} else {
+			numFormat = NumberFormat.getInstance(Locale.US);
+		}
 		
 		try (BufferedReader br = Files.newBufferedReader(Paths.get(path))) {
 			if (header) {
@@ -35,16 +45,19 @@ public class BudgetBookItemService {
 			while ((line = br.readLine()) != null) {
 				information = line.split(";", 6);
 				
-				tempBudgetBookItem = new BudgetBookItem(LocalDate.parse(getDateFromGermanDateFormat(information[0])),
-						information[3], Category.getEnumFromGermanDescription(information[4]), Double.parseDouble(information[5]));
-				
-				this.budgetBookItemRepo.save(tempBudgetBookItem);
+				try {
+					tempBudgetBookItem = new BudgetBookItem(LocalDate.parse(getDateFromGermanDateFormat(information[0])),
+							information[3], Category.getEnumFromGermanDescription(information[4]), numFormat.parse(information[5]).doubleValue());
+					this.budgetBookItemRepo.save(tempBudgetBookItem);
+				} catch (ParseException pe) {
+					this.logger.error("Corrupted data in CSV-file!");
+				}
 			}
 		
 			this.logger.info("Budget data from CSV-file succesfully imported.");
 			
 		} catch (IOException ioe) {
-			this.logger.error("Error during dudget data import from CSV-file!");
+			this.logger.error("Error during budget data import from CSV-file!");
 		}
 	}
 	
