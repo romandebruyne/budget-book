@@ -18,7 +18,7 @@ public class DatabaseConfiguration {
 	@PostConstruct
 	public void setupDatabase() {
 		if (this.budgetBookItemRepo.findAll().isEmpty()) {
-			this.bugetBookItemService.readBudgetBookDataFromCSV(true);
+			this.bugetBookItemService.readBudgetBookDataFromCSV(true, ',');
 		}
 	}
 }
