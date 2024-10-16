@@ -44,9 +44,29 @@ public enum Category {
 		return this.germanDescription;
 	}
 	
+	public static Category getEnumFromDescription(String text) {
+        for (Category c : Category.values()) {
+            if (c.getGermanDescription().equalsIgnoreCase(text) || c.getEnglishDescription().equalsIgnoreCase(text)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+	
 	public static Category getEnumFromGermanDescription(String text) {
         for (Category c : Category.values()) {
             if (c.getGermanDescription().equalsIgnoreCase(text)) {
+                return c;
+            }
+        }
+        
+        return null;
+    }
+	
+	public static Category getEnumFromEnglishDescription(String text) {
+        for (Category c : Category.values()) {
+            if (c.getEnglishDescription().equalsIgnoreCase(text)) {
                 return c;
             }
         }

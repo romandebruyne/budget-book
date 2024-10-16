@@ -7,7 +7,9 @@ import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,4 +67,74 @@ public class BudgetBookItemService {
 		String[] information = dateAsString.replace("\"", "").split("\\.");
 		return information[2] + "-" + information[1] + "-" + information[0];
 	}
+	
+	public Map<String, String> createDataMappingForItemCreation(String date, String description,
+			String category, String amount) {
+		Map<String, String> mapping = new HashMap<>();
+
+		mapping.put("date", date);
+		mapping.put("description", description);
+		mapping.put("category", category);
+		mapping.put("amount", amount);
+
+		return mapping;
+	}
+	
+	public BudgetBookItem createNewBudgetBookItem(Map<String, String> dataMapping) {
+		LocalDate date;
+		Category category;
+		double amount;
+		
+		if (!isValidDateFormat(dataMapping.get("date"))) {
+			this.logger.warn("Invalid date format.");
+			return null;
+		} else {
+			date = LocalDate.parse(dataMapping.get("date"));
+		}
+		
+		if (!isValidCategory(dataMapping.get("category"))) {
+			this.logger.warn("Invalid category.");
+			return null;
+		} else {
+			category = Category.getEnumFromDescription(dataMapping.get("category"));
+		}
+		
+		if (!isValidNumberFormat(dataMapping.get("amount"))) {
+			this.logger.warn("Invalid number format for amount field.");
+			return null;
+		} else {
+			amount = Double.parseDouble(dataMapping.get("amount"));
+		}
+			
+		
+		return new BudgetBookItem(date, dataMapping.get("description"), category, amount);
+	}
+	
+	public boolean isValidDateFormat(String dateAsString) {
+		try {
+			LocalDate.parse(dateAsString);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean isValidNumberFormat(String numberAsString) {
+		try {
+			Double.parseDouble(numberAsString);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean isValidCategory(String categoryAsString) {
+		if (Category.getEnumFromDescription(categoryAsString) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
 }
