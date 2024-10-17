@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class BudgetBookItemService {
 		return information[2] + "-" + information[1] + "-" + information[0];
 	}
 	
-	public Map<String, String> createDataMappingForItemCreation(String date, String description,
+	public Map<String, String> createDataMapping(String date, String description,
 			String category, String amount) {
 		Map<String, String> mapping = new HashMap<>();
 
@@ -80,7 +81,7 @@ public class BudgetBookItemService {
 		return mapping;
 	}
 	
-	public BudgetBookItem createNewBudgetBookItem(Map<String, String> dataMapping) {
+	public BudgetBookItem createBudgetBookItemFromDataMapping(Map<String, String> dataMapping) {
 		LocalDate date;
 		Category category;
 		double amount;
@@ -105,7 +106,6 @@ public class BudgetBookItemService {
 		} else {
 			amount = Double.parseDouble(dataMapping.get("amount"));
 		}
-			
 		
 		return new BudgetBookItem(date, dataMapping.get("description"), category, amount);
 	}
@@ -114,7 +114,7 @@ public class BudgetBookItemService {
 		try {
 			LocalDate.parse(dateAsString);
 			return true;
-		} catch (Exception e) {
+		} catch (DateTimeParseException dtpe) {
 			return false;
 		}
 	}
@@ -123,7 +123,7 @@ public class BudgetBookItemService {
 		try {
 			Double.parseDouble(numberAsString);
 			return true;
-		} catch (Exception e) {
+		} catch (NumberFormatException nfe) {
 			return false;
 		}
 	}
