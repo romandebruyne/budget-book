@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { BudgetBookItem, getAllItems } from "./api";
+import { ItemDetailsPage } from "./ItemDetailsPage";
 import "./Datagrid.css";
 
 type Props = { onBack: () => void }
@@ -8,10 +9,21 @@ type Props = { onBack: () => void }
 export function AllItemsPage(props: Props) {
     const [allItemsPageIsOpen, setAllItemsPageIsOpen] = useState(true);
     const [items, setItems] = useState<null | BudgetBookItem[]>(null);
+    const [idOfSelectedItem, setIdOfSelectedItem] = useState(-1);
 
     useEffect(() => {
         getAllItems().then(body => setItems(body.data))
     }, [])
+
+    function handleClickOnRow(params: GridRowParams) {
+        setAllItemsPageIsOpen(false);
+        setIdOfSelectedItem(params.row.id);
+    }
+
+    function backFromItemDetailPage() {
+        setIdOfSelectedItem(-1);
+        setAllItemsPageIsOpen(true);
+    }
 
     const tableColumns: GridColDef[] = [
         { field: 'id', headerName: 'ID', width: 80 },
@@ -32,6 +44,7 @@ export function AllItemsPage(props: Props) {
                         { items !== null ?
                             <div className="whitetable">
                                 <DataGrid
+                                    onRowClick={ handleClickOnRow }
                                     rows={ items }
                                     columns={ tableColumns }
                                     initialState={ { pagination: { paginationModel: { page: 0, pageSize: 50 }, }, } }
@@ -40,6 +53,8 @@ export function AllItemsPage(props: Props) {
                     </div>
                 </> : null
             }
+
+            { idOfSelectedItem !== -1 ? <ItemDetailsPage idOfSelectedItem={ idOfSelectedItem } onBack={ backFromItemDetailPage } /> : null }
         </>
     )
 }

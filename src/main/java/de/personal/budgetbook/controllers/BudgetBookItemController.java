@@ -37,6 +37,11 @@ public class BudgetBookItemController {
 		return this.budgetBookItemRepo.findAll();
 	}
 	
+	@GetMapping("/items/{id}")
+	public BudgetBookItem getBudgetBookItemById(@PathVariable long id) {
+		return this.budgetBookItemRepo.findById(id).orElse(null);
+	}
+	
 	@PostMapping("/items")
 	public ResponseEntity<BudgetBookItem> createBudgetBookItem(
 			@RequestParam(value = "date", defaultValue = "", required = true) String date,
@@ -77,7 +82,7 @@ public class BudgetBookItemController {
         }
 	}
 
-	@DeleteMapping("/items")
+	@DeleteMapping("/items/{id}")
 	public ResponseEntity<HttpStatus> deleteBudgetBookItem(@PathVariable String idAsString) {
 		long id;
 		
