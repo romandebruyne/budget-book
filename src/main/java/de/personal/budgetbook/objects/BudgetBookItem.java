@@ -3,8 +3,6 @@ package de.personal.budgetbook.objects;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,10 +15,7 @@ public class BudgetBookItem {
 	
 	private LocalDate date;
 	private String description;
-
-	@Enumerated(EnumType.STRING)
 	private Category category;
-	
 	private double amount;
 	
 	public BudgetBookItem(long id, LocalDate date, String description, Category category, double amount) {

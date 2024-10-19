@@ -1,5 +1,7 @@
 package de.personal.budgetbook.objects;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Category {
 	ALCOHOL("Alcohol, Party etc.", "Alkohol, Party etc."),
 	PURCHASES_BOOKS("Purchases: Books", "Anschaffungen: Bücher"),
@@ -9,7 +11,7 @@ public enum Category {
 	GROCERIES("Groceries", "Einkauf/Essen"),
 	INCOME("Income", "Einnahme"),
 	LEISURE_FOOTBALL("Leisure: Football", "Freizeit: Kicken"),
-	LEISURE_OTHERS("Leisure: Other", "Freizeit: sonstiges"),
+	LEISURE_OTHERS("Leisure: Others", "Freizeit: sonstiges"),
 	LEISURE_VACATION("Leisure: Vacation", "Freizeit: Urlaub"),
 	PARENTS("For/From parents", "Für/Von Eltern"),
 	DONATIONS("Donations", "Spenden"),
@@ -25,7 +27,8 @@ public enum Category {
 	APARTMENT_PURCHASES("Apartment: Purchases", "Wohnung: Anschaffungen"),
 	APARTMENT_RENT("Apartment: Rent", "Wohnung: Miete"),
 	APARTMENT_UTIL("Apartment: Utilities", "Wohnung: Nebenkosten"),
-	CIGARTTES("Cigarettes", "Zigaretten");
+	CIGARTTES("Cigarettes", "Zigaretten"),
+	UNKNOWN("Unknown", "Unbekannt");
 	
 	private String englishDescription;
 	private String germanDescription;
@@ -33,9 +36,9 @@ public enum Category {
 	private Category(String englishDescription, String germanDescription) {
 		this.englishDescription = englishDescription;
 		this.germanDescription = germanDescription;
-		
 	}
 	
+	@JsonValue
 	public String getEnglishDescription() {
 		return this.englishDescription;
 	}
