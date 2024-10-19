@@ -64,6 +64,7 @@ public class BudgetBookItemController {
 	
 	@PutMapping("/items")
 	public ResponseEntity<BudgetBookItem> editBudgetBookItem(
+			@RequestParam(value = "id", defaultValue = "", required = false) String id,
 			@RequestParam(value = "date", defaultValue = "", required = true) String date,
 			@RequestParam(value = "description", defaultValue = "", required = true) String description,
 			@RequestParam(value = "category", defaultValue = "", required = true) String category,
@@ -71,7 +72,7 @@ public class BudgetBookItemController {
 		
 		Map<String, String> dataMapping = this.budgetBookItemService.createDataMapping(date,
 				description, category, amount);
-		BudgetBookItem itemToEdit = this.budgetBookItemService.createBudgetBookItemFromDataMapping(dataMapping);
+		BudgetBookItem itemToEdit = this.budgetBookItemService.updateBudgetBookItemFromDataMapping(Long.parseLong(id), dataMapping);
 		
 		if (itemToEdit != null) {
         	this.logger.info("Item was successfully modified!");

@@ -110,6 +110,40 @@ public class BudgetBookItemService {
 		return new BudgetBookItem(date, dataMapping.get("description"), category, amount);
 	}
 	
+	public BudgetBookItem updateBudgetBookItemFromDataMapping(long idOfItemToUpdate, Map<String, String> dataMapping) {
+		BudgetBookItem itemToUpdate = this.budgetBookItemRepo.findById(idOfItemToUpdate).orElse(null);
+		
+		if (itemToUpdate == null) {
+			this.logger.warn("Item not found.");
+			return null;
+		}
+		
+		if (!isValidDateFormat(dataMapping.get("date"))) {
+			this.logger.warn("Invalid date format.");
+			return null;
+		} else {
+			itemToUpdate.setDate(LocalDate.parse(dataMapping.get("date")));
+		}
+		
+		itemToUpdate.setDescription(dataMapping.get("description"));
+		
+		if (!isValidCategory(dataMapping.get("category"))) {
+			this.logger.warn("Invalid category.");
+			return null;
+		} else {
+			itemToUpdate.setCategory(Category.getEnumFromDescription(dataMapping.get("category")));
+		}
+		
+		if (!isValidNumberFormat(dataMapping.get("amount"))) {
+			this.logger.warn("Invalid number format for amount field.");
+			return null;
+		} else {
+			itemToUpdate.setAmount(Double.parseDouble(dataMapping.get("amount")));
+		}
+		
+		return itemToUpdate;
+	}
+	
 	public boolean isValidDateFormat(String dateAsString) {
 		try {
 			LocalDate.parse(dateAsString);
