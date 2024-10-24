@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { BudgetBookItem, getAllItems } from "./api";
 import { ItemDetailsPage } from "./ItemDetailsPage";
+import { CreateItemPage } from "./CreateItemPage";
 import "./Datagrid.css";
+import "./AllItemsPage.css";
 
 type Props = { onBack: () => void }
 
 export function AllItemsPage(props: Props) {
     const [allItemsPageIsOpen, setAllItemsPageIsOpen] = useState(true);
+    const [createItemPageIsOpen, setCreateItemPageIsOpen] = useState(false);
     const [items, setItems] = useState<null | BudgetBookItem[]>(null);
     const [idOfSelectedItem, setIdOfSelectedItem] = useState(-1);
 
@@ -20,8 +23,23 @@ export function AllItemsPage(props: Props) {
         setIdOfSelectedItem(params.row.id);
     }
 
+    function handleClickOnCreateItem() {
+        setCreateItemPageIsOpen(true);
+        setAllItemsPageIsOpen(false);
+    }
+
+    function handleItemCreation(itemWasCreated: boolean) {
+        setCreateItemPageIsOpen(false);
+        setAllItemsPageIsOpen(itemWasCreated);
+    }
+
     function backFromItemDetailPage() {
         setIdOfSelectedItem(-1);
+        setAllItemsPageIsOpen(true);
+    }
+
+    function backFromCreateItemPage() {
+        setCreateItemPageIsOpen(false);
         setAllItemsPageIsOpen(true);
     }
 
@@ -38,8 +56,11 @@ export function AllItemsPage(props: Props) {
             { allItemsPageIsOpen ?
                 <>
                     <h2>All items</h2>
-                    <button onClick={ props.onBack }>Back</button><br /><br />
-
+                    <div className="box">
+                        <button onClick={ handleClickOnCreateItem }>Create item</button>
+                        <button onClick={ props.onBack }>Back</button><br /><br />
+                    </div>
+                    
                     <div>
                         { items !== null ?
                             <div className="whitetable">
@@ -55,6 +76,8 @@ export function AllItemsPage(props: Props) {
             }
 
             { idOfSelectedItem !== -1 ? <ItemDetailsPage idOfSelectedItem={ idOfSelectedItem } onBack={ backFromItemDetailPage } /> : null }
+
+            { createItemPageIsOpen ? <CreateItemPage onSubmit={ handleItemCreation } onBack={ backFromCreateItemPage } /> : null }
         </>
     )
 }

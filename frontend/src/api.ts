@@ -18,6 +18,16 @@ export async function getItemById(id: number) {
     return response;
 }
 
+export async function createItem(date: string, description: string, category: string, amount: number) {
+    let FINAL_URL = ITEMS_URL + "?date=" + date + "&" +
+        "description=" + description + "&" +
+        "category=" + category + "&" +
+        "amount=" + amount;
+    
+    const response = await axios.post(FINAL_URL);
+    return response;
+}
+
 export async function editItem(id: number, date: string, description: string, category: string, amount: number) {
 
     let FINAL_URL = ITEMS_URL + "?id=" + id + "&" +
