@@ -8,7 +8,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -67,18 +66,6 @@ public class BudgetBookItemService {
 	private String getDateFromGermanDateFormat(String dateAsString) {
 		String[] information = dateAsString.replace("\"", "").split("\\.");
 		return information[2] + "-" + information[1] + "-" + information[0];
-	}
-	
-	public Map<String, String> createDataMapping(String date, String description,
-			String category, String amount) {
-		Map<String, String> mapping = new HashMap<>();
-
-		mapping.put("date", date);
-		mapping.put("description", description);
-		mapping.put("category", category);
-		mapping.put("amount", amount);
-
-		return mapping;
 	}
 	
 	public BudgetBookItem createBudgetBookItemFromDataMapping(Map<String, String> dataMapping) {

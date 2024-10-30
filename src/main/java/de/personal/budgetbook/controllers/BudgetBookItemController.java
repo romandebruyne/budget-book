@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.personal.budgetbook.objects.BudgetBookItem;
@@ -44,13 +44,8 @@ public class BudgetBookItemController {
 	
 	@PostMapping("/items")
 	public ResponseEntity<BudgetBookItem> createBudgetBookItem(
-			@RequestParam(value = "date", defaultValue = "", required = true) String date,
-			@RequestParam(value = "description", defaultValue = "", required = true) String description,
-			@RequestParam(value = "category", defaultValue = "", required = true) String category,
-			@RequestParam(value = "amount", defaultValue = "", required = true) String amount) {
+			@RequestBody Map<String, String> dataMapping) {
 		
-		Map<String, String> dataMapping = this.budgetBookItemService.createDataMapping(date,
-				description, category, amount);
 		BudgetBookItem itemToCreate = this.budgetBookItemService.createBudgetBookItemFromDataMapping(dataMapping);
 		
         if (itemToCreate != null) {
@@ -64,15 +59,10 @@ public class BudgetBookItemController {
 	
 	@PutMapping("/items")
 	public ResponseEntity<BudgetBookItem> editBudgetBookItem(
-			@RequestParam(value = "id", defaultValue = "", required = false) String id,
-			@RequestParam(value = "date", defaultValue = "", required = true) String date,
-			@RequestParam(value = "description", defaultValue = "", required = true) String description,
-			@RequestParam(value = "category", defaultValue = "", required = true) String category,
-			@RequestParam(value = "amount", defaultValue = "", required = true) String amount) {
-		
-		Map<String, String> dataMapping = this.budgetBookItemService.createDataMapping(date,
-				description, category, amount);
-		BudgetBookItem itemToEdit = this.budgetBookItemService.updateBudgetBookItemFromDataMapping(Long.parseLong(id), dataMapping);
+			@RequestBody Map<String, String> dataMapping) {
+
+		BudgetBookItem itemToEdit = this.budgetBookItemService.updateBudgetBookItemFromDataMapping(
+				Long.parseLong(dataMapping.get("id")), dataMapping);
 		
 		if (itemToEdit != null) {
         	this.logger.info("Item was successfully modified!");
