@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import "./SimpleTable.css";
 import { getItemById } from "./api";
 import { EditItemPage } from "./EditItemPage";
+import { DeleteItemPage } from "./DeleteItemPage";
+import "./SimpleTable.css";
 
 type Props = { idOfSelectedItem: number; onBack: () => void };
 
 export function ItemDetailsPage(props: Props) {
     const [itemDetailsPageIsOpen, setItemDetailsPageIsOpen] = useState(true);
     const [editItemPageIsOpen, setEditItemPageIsOpen] = useState(false);
+    const [deleteItemPageIsOpen, setDeleteItemPageIsOpen] = useState(false);
     const [id, setId] = useState(0);
     const [date, setDate] = useState("");
     const [description, setDescription] = useState("");
@@ -31,13 +33,28 @@ export function ItemDetailsPage(props: Props) {
         setItemDetailsPageIsOpen(false);
     }
 
+    function handleClickOnDeleteItem() {
+        setDeleteItemPageIsOpen(true);
+        setItemDetailsPageIsOpen(false);
+    }
+
     function handleItemDetailsEdit(itemDetailsWereEdited: boolean) {
         setEditItemPageIsOpen(false);
         setItemDetailsPageIsOpen(itemDetailsWereEdited);
     }
 
+    function handleItemDeletion(itemWasDeleted: boolean) {
+        setDeleteItemPageIsOpen(false);
+        setItemDetailsPageIsOpen(!itemWasDeleted);
+    }
+
     function backFromEditItemPage() {
         setEditItemPageIsOpen(false);
+        setItemDetailsPageIsOpen(true);
+    }
+
+    function backFromDeleteItemPage() {
+        setDeleteItemPageIsOpen(false);
         setItemDetailsPageIsOpen(true);
     }
 
@@ -78,11 +95,21 @@ export function ItemDetailsPage(props: Props) {
                     </table><br />
 
                     <button onClick={ handleClickOnEditItemDetails }>Edit item details</button><br /><br />
-                    <button onClick= { props.onBack }>Back</button>
+                    <button onClick={ handleClickOnDeleteItem }>Delete item</button><br /><br />
+                    <button onClick={ props.onBack }>Back</button>
                 </> : null
             }
 
-            { editItemPageIsOpen ? <EditItemPage idOfSelectedItem={ id } onSubmit={ handleItemDetailsEdit }  onBack={ backFromEditItemPage } /> : null }            
+            { !itemDetailsPageIsOpen && !deleteItemPageIsOpen && !editItemPageIsOpen ? 
+                <>
+                    <h2>Item was deleted!</h2>
+                    <p>Return via 'Continue' button.</p>
+                    <button onClick={ props.onBack }>Continue</button>
+                </> : null
+            }
+            
+            { editItemPageIsOpen ? <EditItemPage idOfSelectedItem={ id } onSubmit={ handleItemDetailsEdit } onBack={ backFromEditItemPage } /> : null }
+            { deleteItemPageIsOpen ? <DeleteItemPage idOfSelectedItem={ id } onSubmit={ handleItemDeletion } onBack={ backFromDeleteItemPage } /> : null }            
         </>
     )
 

@@ -74,16 +74,7 @@ public class BudgetBookItemController {
 	}
 
 	@DeleteMapping("/items/{id}")
-	public ResponseEntity<HttpStatus> deleteBudgetBookItem(@PathVariable String idAsString) {
-		long id;
-		
-		try {
-			id = Long.parseLong(idAsString);
-		} catch (NumberFormatException nfe) {
-			this.logger.error("Invalid item ID!");
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		
+	public ResponseEntity<HttpStatus> deleteBudgetBookItem(@PathVariable long id) {
 		if (this.budgetBookItemRepo.findById(id).orElse(null) != null) {
 			this.budgetBookItemRepo.delete(this.budgetBookItemRepo.findById(id).get());
 	        this.logger.info("Deletion was successful!");

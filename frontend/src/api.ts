@@ -42,3 +42,8 @@ export async function editItem(id: number, date: string, description: string, ca
     return response;
 }
 
+export async function deleteItemById(id: number) {
+    const response = await axios.delete<BudgetBookItem>(ITEMS_URL + "/" + id);
+    return response;
+}
+
