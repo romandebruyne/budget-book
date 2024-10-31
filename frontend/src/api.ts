@@ -7,6 +7,11 @@ export type BudgetBookItem = {
     id: number, date: string, description: string, category: string, amount: number
 }
 
+export async function getAllCategories() {
+    const response = await axios.get<string[]>(ITEMS_URL + "/categories");
+    return response;
+}
+
 export async function getAllItems() {
     const response = await axios.get<BudgetBookItem[]>(ITEMS_URL);
     return response;
@@ -14,6 +19,17 @@ export async function getAllItems() {
 
 export async function getItemById(id: number) {
     const response = await axios.get<BudgetBookItem>(ITEMS_URL + "/" + id);
+    return response;
+}
+
+export async function getItemsByCategory(category: string) {
+    let FINAL_URL = ITEMS_URL + "/categories/";
+
+    if (category !== "") {
+        FINAL_URL += category;
+    }
+
+    const response = await axios.get<BudgetBookItem[]>(FINAL_URL);
     return response;
 }
 

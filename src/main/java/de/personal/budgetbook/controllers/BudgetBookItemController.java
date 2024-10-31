@@ -1,5 +1,7 @@
 package de.personal.budgetbook.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.personal.budgetbook.objects.BudgetBookItem;
+import de.personal.budgetbook.objects.Category;
 import de.personal.budgetbook.repos.BudgetBookItemRepository;
 import de.personal.budgetbook.services.BudgetBookItemService;
 
@@ -40,6 +43,16 @@ public class BudgetBookItemController {
 	@GetMapping("/items/{id}")
 	public BudgetBookItem getBudgetBookItemById(@PathVariable long id) {
 		return this.budgetBookItemRepo.findById(id).orElse(null);
+	}
+	
+	@GetMapping("/items/categories")
+	public List<Category> getAllCategories() {
+		return new ArrayList<>(Arrays.asList(Category.values()));
+	}
+		
+	@GetMapping("/items/categories/{category}")
+	public List<BudgetBookItem> getBudgetBookItemsByCategory(@PathVariable String category) {
+		return this.budgetBookItemRepo.findAllByCategory(Category.getEnumFromDescription(category));
 	}
 	
 	@PostMapping("/items")
